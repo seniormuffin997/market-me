@@ -1,17 +1,29 @@
+import { useState, useEffect } from 'react'
 import './App.css'
-
-// Featured company pages. Companies pay for a page and post deals;
-// shoppers follow the brands they love. React builds one card per company.
-const companies = [
-  { emoji: '👟', name: 'Stride', deal: '20% off all running shoes', followers: '12.4k' },
-  { emoji: '🍔', name: 'BunHouse', deal: 'Free fries with any burger', followers: '8.1k' },
-  { emoji: '🎮', name: 'PixelPlay', deal: '£10 off games over £40', followers: '23.7k' },
-  { emoji: '☕', name: 'Bean & Co', deal: 'Buy 9 coffees, get 1 free', followers: '5.6k' },
-  { emoji: '👕', name: 'Thread', deal: 'Buy one tee, get one half price', followers: '15.2k' },
-  { emoji: '📚', name: 'PagePlus', deal: '3 for 2 on all books', followers: '9.9k' },
-]
+import { supabase } from './supabaseClient'
 
 function App() {
+  // The companies now come from the database, not a fixed list in the code.
+  const [companies, setCompanies] = useState([])
+
+  // When the page first loads, fetch the companies from Supabase once.
+  useEffect(() => {
+    async function loadCompanies() {
+      const { data, error } = await supabase
+        .from('companies')
+        .select('*')
+        .order('id')
+
+      if (error) {
+        console.error('Could not load companies:', error)
+      } else {
+        setCompanies(data)
+      }
+    }
+
+    loadCompanies()
+  }, [])
+
   return (
     <div className="app">
       <header className="nav">
@@ -65,12 +77,14 @@ function App() {
 
       <section className="grid">
         {companies.map((company) => (
-          <article className="card" key={company.name}>
+          <article className="card" key={company.id}>
             <div className="card-emoji">{company.emoji}</div>
             <h3 className="card-title">{company.name}</h3>
             <p className="card-deal">{company.deal}</p>
             <div className="card-meta">
-              <span className="followers">{company.followers} followers</span>
+              <span className="followers">
+                {Number(company.followers).toLocaleString()} followers
+              </span>
               <button className="follow-btn">Follow</button>
             </div>
           </article>
