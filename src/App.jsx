@@ -47,7 +47,7 @@ function App() {
 
       <section className="hero">
         <span className="hero-badge">✦ New deals every day</span>
-        <h1 className="hero-title">Follow your favourite brands. Never miss a deal.</h1>
+        <h1 className="hero-title">All your favourite brands, all their best deals</h1>
         <p className="hero-sub">
           Follow the companies you love and never miss a deal — or claim your
           business page and reach shoppers who already want to buy from you.
